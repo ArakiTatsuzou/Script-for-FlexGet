@@ -5,64 +5,79 @@ exit() {
 }
 
 editConfig() {
-	ssh -t synology 'vim /usr/local/flexget/env/config.yml'
+	ssh -t synology "vim /usr/local/flexget/env/config.yml"
+}
+
+replaceConfig() {
+	ssh -t synology "cp /volume1/Storage/その他/config.yml /usr/local/flexget/env/config.yml"
 }
 
 flexgetHistory() {
-	ssh -t synology '/usr/local/flexget/env/bin/flexget history'
+	ssh -t synology "/usr/local/flexget/env/bin/flexget history"
 }
 
 flexgetLog() {
-	ssh -t synology 'vim /usr/local/flexget/env/flexget.log'
+	ssh -t synology "vim /usr/local/flexget/env/flexget.log"
 }
 
 executeTasks() {
-	ssh -t synology '/usr/local/flexget/env/bin/flexget execute'
+	ssh -t synology "/usr/local/flexget/env/bin/flexget execute"
+}
+
+executeSpecificTask() {
+	echo "\n実行させたい任務の名前を入力してください"
+	read task
+	ssh -t synology "/usr/local/flexget/env/bin/flexget execute --tasks ${task}"
 }
 
 reloadConfig() {
-	ssh -t synology '/usr/local/flexget/env/bin/flexget daemon reload-config'
+	ssh -t synology "/usr/local/flexget/env/bin/flexget daemon reload-config"
 }
 
 daemonStatus() {
-	ssh -t synology '/usr/local/flexget/env/bin/flexget daemon status'
+	ssh -t synology "/usr/local/flexget/env/bin/flexget daemon status"
 }
 
 stopDaemon() {
-	ssh -t synology '/usr/local/flexget/env/bin/flexget daemon stop'
+	ssh -t synology "/usr/local/flexget/env/bin/flexget daemon stop"
 }
 
 startDaemon() {
-	ssh -t synology '/usr/local/flexget/env/bin/flexget daemon start -d'
+	ssh -t synology "/usr/local/flexget/env/bin/flexget daemon start -d"
 }
 
 startDaemonAuto() {
-	ssh -t synology '/usr/local/flexget/env/bin/flexget daemon start -d --autoreload-config'
+	ssh -t synology "/usr/local/flexget/env/bin/flexget daemon start -d --autoreload-config"
 }
 
+
 ask() {
-	echo "1. 設定を変更"
-	echo "2. トレント履歴"
-	echo "3. FlexGetログ"
-	echo "4. 全ての任務を実行"
-	echo "5. 設定を再読み込み"
-	echo "6. 常駐プロセスの状態"
-	echo "7. 常駐プロセスを停止"
-	echo "8. 常駐プロセスを開始"
-	echo "9. 常駐プロセスを開始 (自動)\n"
+	echo "01. 設定を見る"
+	echo "02. 設定を書き換える"
+	echo "03. 設定を再読み込み"
+	echo "04. 指定の任務を実行"
+	echo "05. 全ての任務を実行"
+	echo "06. トレント履歴を見る"
+	echo "07. FlexGetログを見る"
+	echo "08. 常駐プロセスの状態"
+	echo "09. 常駐プロセスを停止"
+	echo "10. 常駐プロセスを開始"
+	echo "11. 常駐プロセスを開始 (自動)\n"
 
 	read choice
 
 	case $choice in
 		1) editConfig;;
-		2) flexgetHistory;;
-		3) flexgetLog;;
-		4) executeTasks;;
-		5) reloadConfig;;
-		6) daemonStatus;;
-		7) stopDaemon;;
-		8) startDaemon;;
-		9) startDaemonAuto;;
+		2) replaceConfig;;
+		3) reloadConfig;;
+		4) executeSpecificTask;;
+		5) executeTasks;;
+		6) flexgetHistory;;
+		7) flexgetLog;;
+		8) daemonStatus;;
+		9) stopDaemon;;
+		10) startDaemon;;
+		11) startDaemonAuto;;
 		*) exit;;
 	esac
 }
